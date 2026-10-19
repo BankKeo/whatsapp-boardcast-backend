@@ -53,7 +53,8 @@ curl -X POST http://localhost:4000/api/v1/auth/login \
 | `npm run lint` | ESLint |
 | `npm test` | Vitest unit + integration suite |
 | `npm run test:watch` | Vitest in watch mode |
-| `npm run seed` | Seed the demo dataset |
+| `npm run seed` | Seed the full demo dataset (180 outlets) |
+| `npm run seed:mock` | Seed 10 records per entity collection (users, outlets, segments, templates, campaigns, recipients, imports, audit logs) |
 | `npm run seed:admin` | Create/refresh only the administrator |
 
 ## 4. Environment variables

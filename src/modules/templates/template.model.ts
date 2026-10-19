@@ -55,7 +55,12 @@ const templateSchema = new Schema(
   baseSchemaOptions,
 );
 
-templateSchema.index({ name: "text", body: "text" });
+/*
+ * `language_override` is renamed because this schema also stores a `language`
+ * field ("en" | "lo"). Without it MongoDB would treat that value as the text
+ * index language and reject Lao documents ("language override unsupported: lo").
+ */
+templateSchema.index({ name: "text", body: "text" }, { language_override: "textSearchLanguage" });
 templateSchema.index({ status: 1, language: 1 });
 templateSchema.index({ providerTemplateId: 1 }, { unique: true, sparse: true });
 

@@ -105,7 +105,11 @@ const campaignSchema = new Schema(
   baseSchemaOptions,
 );
 
-campaignSchema.index({ name: "text", description: "text", owner: "text" });
+/* See template.model.ts: `language` is a domain field, not a text-index override. */
+campaignSchema.index(
+  { name: "text", description: "text", owner: "text" },
+  { language_override: "textSearchLanguage" },
+);
 campaignSchema.index({ status: 1, createdAt: -1 });
 campaignSchema.index({ status: 1, scheduledAt: 1 }); // scheduler sweep
 /*

@@ -17,7 +17,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "seed": "tsx scripts/seed.ts",
-    "seed:admin": "tsx scripts/seed.ts --only=admin"
+    "seed:admin": "tsx scripts/seed.ts --only=admin",
+    "seed:mock": "tsx scripts/seed-mock.ts"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
