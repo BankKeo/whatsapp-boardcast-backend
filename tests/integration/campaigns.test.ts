@@ -213,6 +213,65 @@ describe("Campaign lifecycle", () => {
     expect(preview.body.data.blocking.length).toBeGreaterThan(0);
   });
 
+  it("stores an image header URL and freezes it onto each recipient", async () => {
+    const { token, templateId } = await setup();
+    const imageUrl = "https://cdn.example.com/promo/banner.jpg";
+    const created = await request(app)
+      .post("/api/v1/campaigns")
+      .set(authHeader(token))
+      .send(
+        campaignBody(templateId, {
+          message: {
+            templateId,
+            language: "en",
+            message: "Hello partner, a Partner Club promotion is running this month.",
+            imageUrl,
+          },
+        }),
+      );
+    expect(created.status).toBe(201);
+    expect(created.body.data.imageUrl).toBe(imageUrl);
+    const id = created.body.data.id as string;
+
+    await request(app)
+      .post(`/api/v1/campaigns/${id}/schedule`)
+      .set(authHeader(token))
+      .send({ scheduledAt: null, language: "en" });
+    await request(app).post(`/api/v1/campaigns/${id}/send`).set(authHeader(token));
+    await queue.drain();
+
+    const recipients = await CampaignRecipientModel.find({ campaignId: id });
+    expect(recipients.length).toBeGreaterThan(0);
+    expect(recipients.every((recipient) => recipient.imageUrlSnapshot === imageUrl)).toBe(true);
+  });
+
+  it("defaults the image header to null and rejects an invalid URL", async () => {
+    const { token, templateId } = await setup();
+
+    const created = await request(app)
+      .post("/api/v1/campaigns")
+      .set(authHeader(token))
+      .send(campaignBody(templateId));
+    expect(created.status).toBe(201);
+    expect(created.body.data.imageUrl).toBeNull();
+
+    const invalid = await request(app)
+      .post("/api/v1/campaigns")
+      .set(authHeader(token))
+      .send(
+        campaignBody(templateId, {
+          message: {
+            templateId,
+            language: "en",
+            message: "Hello partner, a Partner Club promotion is running this month.",
+            imageUrl: "not-a-url",
+          },
+        }),
+      );
+    expect(invalid.status).toBe(422);
+    expect(invalid.body.error.details.some((detail: { path: string }) => detail.path.includes("imageUrl"))).toBe(true);
+  });
+
   it("cannot edit a completed campaign", async () => {
     const { token, templateId } = await setup();
     const created = await request(app).post("/api/v1/campaigns").set(authHeader(token)).send(campaignBody(templateId));

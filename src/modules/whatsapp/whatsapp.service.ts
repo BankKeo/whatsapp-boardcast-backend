@@ -68,6 +68,7 @@ export async function sendToRecipient(
       templateName: template.name,
       language: (recipient.languageSnapshot as "en" | "lo") ?? "en",
       parameters: resolveParameters(recipient),
+      imageUrl: recipient.imageUrlSnapshot ?? null,
     });
 
     recipient.providerMessageId = result.providerMessageId;

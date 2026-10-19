@@ -98,6 +98,7 @@ export function toCampaignView(doc: CampaignDocument, extra: Record<string, unkn
     templateName: doc.templateName ?? null,
     language: doc.language,
     message: doc.message,
+    imageUrl: doc.imageUrl ?? null,
     promotionPeriod: doc.promotionPeriod ?? null,
     campaignReference: doc.campaignReference ?? null,
     createdAt: json.createdAt,
@@ -200,6 +201,7 @@ export async function createCampaign(
       templateName: template.name,
       language: values.message.language,
       message: values.message.message,
+      imageUrl: values.message.imageUrl ?? null,
       promotionPeriod: values.message.promotionPeriod ?? null,
       campaignReference: campaignReference(),
       scheduledAt: values.scheduledAt,
@@ -269,6 +271,7 @@ export async function updateCampaign(
     }
     if (patch.message.language !== undefined) campaign.language = patch.message.language;
     if (patch.message.message !== undefined) campaign.message = patch.message.message;
+    if (patch.message.imageUrl !== undefined) campaign.imageUrl = patch.message.imageUrl;
     if (patch.message.promotionPeriod !== undefined) campaign.promotionPeriod = patch.message.promotionPeriod;
   }
 
@@ -479,6 +482,7 @@ export async function duplicateCampaign(id: string, actorId: string, recordAudit
     templateName: original.templateName,
     language: original.language,
     message: original.message,
+    imageUrl: original.imageUrl,
     promotionPeriod: original.promotionPeriod,
     campaignReference: campaignReference(),
     createdBy: actorId,
@@ -560,6 +564,7 @@ export async function prepareRecipients(campaign: CampaignDocument): Promise<Pre
       templateId: campaign.templateId,
       templateNameSnapshot: campaign.templateName,
       languageSnapshot: campaign.language,
+      imageUrlSnapshot: campaign.imageUrl ?? null,
       variables: buildVariables(outlet, campaign),
       status: "Queued" as const,
     });

@@ -22,6 +22,8 @@ const campaignRecipientSchema = new Schema(
     templateId: { type: Schema.Types.ObjectId, ref: "MessageTemplate", default: null },
     templateNameSnapshot: { type: String, default: null },
     languageSnapshot: { type: String, enum: ["en", "lo"], default: "en" },
+    /** Image header URL frozen at enqueue time, or null for a text-only send. */
+    imageUrlSnapshot: { type: String, default: null },
     /** Resolved `{{n}}` values used for this recipient. */
     variables: { type: Schema.Types.Map, of: String, default: {} },
 

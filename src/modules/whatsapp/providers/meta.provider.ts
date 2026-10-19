@@ -80,6 +80,23 @@ export class MetaWhatsAppProvider implements WhatsAppProvider {
 
   async sendTemplateMessage(request: SendTemplateRequest): Promise<SendResult> {
     const { phoneNumberId } = this.requireCredentials();
+
+    // A template with an image header needs a header component carrying the
+    // public media URL; the body component carries the ordered variables.
+    const components: Record<string, unknown>[] = [];
+    if (request.imageUrl) {
+      components.push({
+        type: "header",
+        parameters: [{ type: "image", image: { link: request.imageUrl } }],
+      });
+    }
+    if (request.parameters.length > 0) {
+      components.push({
+        type: "body",
+        parameters: request.parameters.map((text) => ({ type: "text", text })),
+      });
+    }
+
     const body = {
       messaging_product: "whatsapp",
       to: request.to,
@@ -87,15 +104,7 @@ export class MetaWhatsAppProvider implements WhatsAppProvider {
       template: {
         name: request.templateName,
         language: { code: request.language },
-        components:
-          request.parameters.length > 0
-            ? [
-                {
-                  type: "body",
-                  parameters: request.parameters.map((text) => ({ type: "text", text })),
-                },
-              ]
-            : undefined,
+        components: components.length > 0 ? components : undefined,
       },
     };
 

@@ -51,6 +51,15 @@ export const campaignAudienceSchema = z
     },
   );
 
+/**
+ * Optional image-header URL. A cleared form field arrives as an empty string,
+ * so empty values are normalised to `null` rather than failing validation.
+ */
+export const campaignImageUrlSchema = z.preprocess(
+  (value) => (typeof value === "string" && value.trim() === "" ? null : value),
+  z.url("Enter a valid image URL, for example https://example.com/banner.jpg.").max(2048).nullable(),
+);
+
 export const campaignMessageSchema = z.object({
   templateId: z.string().regex(/^[a-f\d]{24}$/i, "Select a message template."),
   language: z.enum(CAMPAIGN_LANGUAGES),
@@ -59,6 +68,8 @@ export const campaignMessageSchema = z.object({
     .trim()
     .min(20, "Message body must be at least 20 characters.")
     .max(1024, "WhatsApp template bodies are limited to 1,024 characters."),
+  /** Public image URL used for the template's image header. */
+  imageUrl: campaignImageUrlSchema.default(null),
   promotionPeriod: z.string().trim().max(120).optional(),
 });
 

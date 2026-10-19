@@ -78,6 +78,12 @@ const campaignSchema = new Schema(
     templateName: { type: String, default: null },
     language: { type: String, enum: CAMPAIGN_LANGUAGES, default: "en" },
     message: { type: String, default: "", maxlength: 1024 },
+    /**
+     * Optional public image URL sent as the template's image header. WhatsApp
+     * requires media headers to be a public link the provider can fetch, so the
+     * dashboard stores a URL rather than bytes (docs/starter-project.md §6).
+     */
+    imageUrl: { type: String, default: null, maxlength: 2048 },
     /** Values for `{{4}}`/`{{5}}` placeholders, per docs/starter-project.md §6. */
     promotionPeriod: { type: String, default: null },
     campaignReference: { type: String, default: null },

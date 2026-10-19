@@ -215,7 +215,7 @@ curl -X POST http://localhost:4000/api/v1/campaigns \
   -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' \
   -d '{ "details": {"name":"December push","objective":"Seasonal promotion","description":"","owner":"Khamla Sisouphan"},
         "audience": {"segmentId":null,"segmentName":null,"filters":{"provinces":["Vientiane Capital"],"categories":["On-Trade"],"consent":"consented","eligibility":"eligible"}},
-        "message": {"templateId":"<id>","language":"en","message":"Hello partner, our seasonal promotion is live."},
+        "message": {"templateId":"<id>","language":"en","message":"Hello partner, our seasonal promotion is live.","imageUrl":"https://cdn.example.com/promo/banner.jpg"},
         "scheduledAt": null, "idempotencyKey":"wizard-0184" }'
 
 curl -X POST http://localhost:4000/api/v1/campaigns/<id>/schedule -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"scheduledAt":null,"language":"en"}'

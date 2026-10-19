@@ -233,6 +233,7 @@ Fields:
 - selectedCategories
 - recipientCount
 - eligibleRecipientCount
+- imageUrl (optional public image used as the template's image header)
 - scheduledAt
 - createdBy
 - approvedBy

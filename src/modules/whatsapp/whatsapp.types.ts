@@ -38,6 +38,8 @@ export interface SendTemplateRequest {
   language: "en" | "lo";
   /** Ordered values for `{{1}}`…`{{n}}`. */
   parameters: string[];
+  /** Optional public image URL for the template's image header. */
+  imageUrl?: string | null;
 }
 
 export interface SendResult {
